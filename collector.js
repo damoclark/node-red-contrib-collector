@@ -27,7 +27,9 @@ module.exports = function(RED) {
         var node = this;
         node.on("input", function(msg) {
             try {
-                if (msg.topic) {
+                if (msg.topic === undefined) {
+                    node.warn("No msg.topic set on message to collector");
+                } else {
                     var value = undefined;
                     if (msg.payload != null && msg.payload != '') {
                         value = msg.payload;
@@ -41,8 +43,6 @@ module.exports = function(RED) {
                         msg.payload = node.values;
                         node.send(msg);
                     }
-                } else {
-                    node.warn("No msg.topic set on message to collector");
                 }
             } catch(err) {
                 node.error(err.message);
